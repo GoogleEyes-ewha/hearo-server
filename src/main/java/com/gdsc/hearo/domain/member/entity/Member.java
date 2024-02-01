@@ -22,7 +22,7 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id", nullable = false)
-    private Long userId; // 기본키
+    private Long memberId; // 기본키
 
     @Column(name = "login_id")
     private String loginId;
