@@ -17,7 +17,10 @@ public enum BaseResponseStatus {
     INVALID_USER_ID(3010, false, "아이디가 존재하지 않습니다."),
     FAILED_TO_LOGIN(3011, false, "비밀번호가 일치하지 않습니다."),
 
-    INTERNAL_SERVER_ERROR(9000, false, "서버 오류가 발생했습니다.");
+    INTERNAL_SERVER_ERROR(9000, false, "서버 오류가 발생했습니다."),
+
+    //204
+    NO_CONTENT(204,false ,"콘텐츠가 없습니다." );
 
     // ==========================
     private int code;

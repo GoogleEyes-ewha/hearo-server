@@ -1,9 +1,5 @@
 package com.gdsc.hearo.domain.item.dto;
-
-import com.gdsc.hearo.domain.item.entity.Item;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 public class CategoryResponseDto {
