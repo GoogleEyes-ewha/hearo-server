@@ -1,6 +1,6 @@
 package com.gdsc.hearo.domain.item.entity;
 
-import com.gdsc.hearo.domain.user.entity.User;
+import com.gdsc.hearo.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,6 +22,6 @@ public class Wish {
     private Item item;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 }

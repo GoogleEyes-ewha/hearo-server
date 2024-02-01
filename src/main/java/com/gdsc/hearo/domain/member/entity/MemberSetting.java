@@ -1,16 +1,16 @@
-package com.gdsc.hearo.domain.user.entity;
+package com.gdsc.hearo.domain.member.entity;
 
 
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "user_setting")
+@Table(name = "member_setting")
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Builder
-public class UserSetting {
+public class MemberSetting {
     public enum VoiceType {
         MALE_VOICE, FEMALE_VOICE
     }
@@ -46,7 +46,7 @@ public class UserSetting {
     @Column(name = "component_type")
     private ComponentType componentType = ComponentType.SIX;
 
-    @OneToOne(mappedBy = "userSetting")
-    private User user;
+    @OneToOne(mappedBy = "memberSetting")
+    private Member member;
 
 }
