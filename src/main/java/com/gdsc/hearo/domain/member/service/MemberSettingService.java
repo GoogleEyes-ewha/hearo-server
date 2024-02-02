@@ -30,4 +30,10 @@ public class MemberSettingService {
         memberRepository.save(member);
 
     }
+
+    public MemberSetting getUserCustom(Member member) {
+        Long settingId = member.getMemberSetting().getSettingId();
+
+        return memberSettingRepository.findById(settingId).orElse(null);
+    }
 }

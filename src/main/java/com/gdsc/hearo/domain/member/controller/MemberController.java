@@ -1,10 +1,8 @@
 package com.gdsc.hearo.domain.member.controller;
 
-import com.gdsc.hearo.domain.member.dto.CustomRequestDto;
-import com.gdsc.hearo.domain.member.dto.LoginRequestDto;
-import com.gdsc.hearo.domain.member.dto.LoginResponseDto;
-import com.gdsc.hearo.domain.member.dto.SignupRequestDto;
+import com.gdsc.hearo.domain.member.dto.*;
 import com.gdsc.hearo.domain.member.entity.Member;
+import com.gdsc.hearo.domain.member.entity.MemberSetting;
 import com.gdsc.hearo.domain.member.service.MemberService;
 import com.gdsc.hearo.domain.member.service.MemberSettingService;
 import com.gdsc.hearo.global.common.BaseResponse;
@@ -26,7 +24,7 @@ public class MemberController {
     private final MemberSettingService memberSettingService;
     private final JwtUtil jwtUtil;
 
-    // 일반 회원가입
+    // [Post] 일반 회원가입
     @PostMapping("/signup")
     public BaseResponse<LoginResponseDto> signup(@RequestBody SignupRequestDto request) {
         Member member = memberService.signup(request);
@@ -39,7 +37,7 @@ public class MemberController {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, loginResponseDto);
     }
 
-    // 일반 로그인
+    // [Post] 일반 로그인
     @PostMapping("/login")
     public BaseResponse<?> signin(@RequestBody LoginRequestDto request) {
         try {
@@ -62,7 +60,7 @@ public class MemberController {
         }
     }
 
-    // 사용자 맞춤 설정
+    // [Post] 사용자 맞춤 설정 등록
     @PostMapping("/custom")
     public BaseResponse<?> customSetting(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody CustomRequestDto request) {
 
@@ -71,4 +69,12 @@ public class MemberController {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, "사용자 맞춤 설정 되었습니다.");
     }
 
+    // [Get] 사용자 맞춤 설정 조회
+    @GetMapping("/custom")
+    public BaseResponse<?> getCustomSetting(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        MemberSetting setting = memberSettingService.getUserCustom(userDetails.getMember());
+        CustomResponseDto customResponseDto = new CustomResponseDto(setting.getDisabilityType(), setting.getFontSize(), setting.getVoiceType(), setting.getScreenType(), setting.getComponentType());
+
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS, customResponseDto);
+    }
 }
