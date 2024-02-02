@@ -77,4 +77,12 @@ public class MemberController {
 
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, customResponseDto);
     }
+
+    // [Patch] 사용자 맞춤 설정 수정
+    @PatchMapping("/custom/edit")
+    public BaseResponse<?> editCustomSetting(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody CustomEditResponseDto request) {
+        memberSettingService.editUserCustom(userDetails.getMember(), request);
+
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS, "사용자 맞춤 설정이 수정되었습니다.");
+    }
 }

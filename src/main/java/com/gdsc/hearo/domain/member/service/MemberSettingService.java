@@ -1,5 +1,6 @@
 package com.gdsc.hearo.domain.member.service;
 
+import com.gdsc.hearo.domain.member.dto.CustomEditResponseDto;
 import com.gdsc.hearo.domain.member.dto.CustomRequestDto;
 import com.gdsc.hearo.domain.member.entity.Member;
 import com.gdsc.hearo.domain.member.entity.MemberSetting;
@@ -35,5 +36,12 @@ public class MemberSettingService {
         Long settingId = member.getMemberSetting().getSettingId();
 
         return memberSettingRepository.findById(settingId).orElse(null);
+    }
+
+    public void editUserCustom(Member member, CustomEditResponseDto request) {
+        MemberSetting memberSetting = member.getMemberSetting();
+        memberSetting.setCustom(request.getFontSize(), request.getScreenType(), request.getComponentType());
+
+        memberSettingRepository.save(memberSetting);
     }
 }

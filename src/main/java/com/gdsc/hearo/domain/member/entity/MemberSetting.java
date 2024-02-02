@@ -49,4 +49,10 @@ public class MemberSetting {
     @OneToOne(mappedBy = "memberSetting")
     private Member member;
 
+
+    public void setCustom(Integer fontSize, ScreenType screenType, ComponentType componentType) {
+        this.fontSize = fontSize;
+        this.screenType = screenType;
+        this.componentType = componentType;
+    }
 }
