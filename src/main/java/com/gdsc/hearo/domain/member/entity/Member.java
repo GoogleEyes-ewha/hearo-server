@@ -47,4 +47,8 @@ public class Member {
     @OneToOne
     @JoinColumn(name = "setting_id")
     private MemberSetting memberSetting;
+
+    public void setMemberSetting(MemberSetting memberSetting) {
+        this.memberSetting = memberSetting;
+    }
 }
