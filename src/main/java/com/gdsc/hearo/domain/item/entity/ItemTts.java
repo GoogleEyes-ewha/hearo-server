@@ -1,5 +1,6 @@
 package com.gdsc.hearo.domain.item.entity;
 
+import com.gdsc.hearo.domain.review.entity.ReviewTts;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -16,6 +17,10 @@ import java.sql.Timestamp;
 @Builder
 public class ItemTts {
 
+    public enum VoiceType {
+        MALE_VOICE, FEMALE_VOICE
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_tts_id", nullable = false)
@@ -23,6 +28,10 @@ public class ItemTts {
 
     @Column(name = "tts_file", nullable = false)
     private String ttsFile;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "voice_type", nullable = false)
+    private ReviewTts.VoiceType voiceType;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
