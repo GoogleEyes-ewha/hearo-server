@@ -1,4 +1,5 @@
 package com.gdsc.hearo.domain.item.dto;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,8 +11,9 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryResponseDto {
+public class SearchResponseDto {
 
+    private String keyword;
     private Integer itemCount;
     private List<ItemDto> list;
 }
