@@ -1,6 +1,7 @@
 package com.gdsc.hearo.domain.member.entity;
 
 
+import com.gdsc.hearo.global.common.VoiceType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,9 +12,6 @@ import lombok.*;
 @Getter
 @Builder
 public class MemberSetting {
-    public enum VoiceType {
-        MALE_VOICE, FEMALE_VOICE
-    }
 
     public enum ScreenType {
         MODE1, MODE2

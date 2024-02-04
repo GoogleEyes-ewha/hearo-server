@@ -1,6 +1,7 @@
 package com.gdsc.hearo.domain.review.entity;
 
 import com.gdsc.hearo.domain.item.entity.Item;
+import com.gdsc.hearo.global.common.VoiceType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -21,9 +22,6 @@ public class ReviewTts {
         POSITIVE, NEGATIVE
     }
 
-    public enum VoiceType {
-        MALE_VOICE, FEMALE_VOICE
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
