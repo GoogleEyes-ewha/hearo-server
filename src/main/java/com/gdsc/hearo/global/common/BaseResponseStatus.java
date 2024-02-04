@@ -17,7 +17,6 @@ public enum BaseResponseStatus {
 
 
 
-    NO_CONTENT(2000,false ,"콘텐츠가 없습니다." ),
 
     // =====================================
     /*
