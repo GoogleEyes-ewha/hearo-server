@@ -3,6 +3,7 @@ package com.gdsc.hearo.domain.review.controller;
 import com.gdsc.hearo.domain.review.dto.ReviewDto;
 import com.gdsc.hearo.domain.review.dto.ReviewListResponseDto;
 import com.gdsc.hearo.domain.review.service.ReviewService;
+import com.gdsc.hearo.global.common.BaseException;
 import com.gdsc.hearo.global.common.BaseResponse;
 import com.gdsc.hearo.global.common.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +25,14 @@ public class ReviewController {
     @GetMapping("/{itemId}/list")
     public BaseResponse<?> getReviewList(@PathVariable Long itemId) {
 
-        List<ReviewDto> reviewList = reviewService.getReviewLists(itemId);
-        ReviewListResponseDto reviewListResponseDto = new ReviewListResponseDto(reviewList.size(), reviewList);
+        try {
+            List<ReviewDto> reviewList = reviewService.getReviewLists(itemId);
+            ReviewListResponseDto reviewListResponseDto = new ReviewListResponseDto(reviewList.size(), reviewList);
 
-        return new BaseResponse<>(BaseResponseStatus.SUCCESS, reviewListResponseDto);
+            return new BaseResponse<>(BaseResponseStatus.SUCCESS, reviewListResponseDto);
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
     }
 
 

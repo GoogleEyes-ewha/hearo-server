@@ -15,6 +15,7 @@ public class BaseResponse<T> {
     private T result;
 
 
+    // 요청에 성공한 경우
     @Builder
     public BaseResponse(BaseResponseStatus status, T result) {
         this.code = status.getCode();
@@ -22,6 +23,14 @@ public class BaseResponse<T> {
         this.message = status.getMessage();
 
         this.result = result;
+    }
+
+    // 요청에 실패한 경우
+    @Builder
+    public BaseResponse(BaseResponseStatus status) {
+        this.code = status.getCode();
+        this.inSuccess = status.isInSuccess();
+        this.message = status.getMessage();
     }
 
 }
