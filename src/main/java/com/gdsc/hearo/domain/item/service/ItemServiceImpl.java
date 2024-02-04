@@ -1,6 +1,6 @@
 package com.gdsc.hearo.domain.item.service;
 
-import com.gdsc.hearo.domain.item.dto.CategoryResponseDto;
+import com.gdsc.hearo.domain.item.dto.ItemDto;
 import com.gdsc.hearo.domain.item.entity.Item;
 import com.gdsc.hearo.domain.item.repository.ItemRepository;
 import org.springframework.stereotype.Service;
@@ -17,18 +17,33 @@ public class ItemServiceImpl implements ItemService  {
         this.itemRepository = itemRepository;
     }
 
-    public List<CategoryResponseDto> getItemByCategory(Long categoryId){
+    public List<ItemDto> getItemByCategory(Long categoryId){
         List<Item> items = itemRepository.findByCategoryCategoryId(categoryId);
-        return items.stream().map(this::convertToDto).collect(Collectors.toList());
+        return items.stream().map(this::convertToCategoryDto).collect(Collectors.toList());
     }
 
-    private CategoryResponseDto convertToDto(Item item){
-        CategoryResponseDto categoryResponseDto = new CategoryResponseDto();
-        categoryResponseDto.setId(item.getItemId());
-        categoryResponseDto.setName(item.getName());
-        categoryResponseDto.setImg(item.getItem_img());
-        categoryResponseDto.setInfo(item.getItemInfo());
-        categoryResponseDto.setPrice(item.getPrice().toString());
-        return categoryResponseDto;
+    public List<ItemDto> getItemByKeyword (String keyword){
+       List<Item> items = itemRepository.findByNameContainingIgnoreCase(keyword);
+       return items.stream().map(item -> convertToSearchDto(item,keyword)).collect(Collectors.toList());
+    }
+
+    private ItemDto convertToCategoryDto(Item item){
+        return new ItemDto(
+                item.getItemId(),
+                item.getName(),
+                item.getItem_img(),
+                item.getItemInfo(),
+                item.getPrice()
+        );
+    }
+
+    private ItemDto convertToSearchDto(Item item, String keyword) {
+        return new ItemDto(
+                item.getItemId(),
+                item.getName(),
+                item.getItem_img(),
+                item.getItemInfo(),
+                item.getPrice()
+        );
     }
 }

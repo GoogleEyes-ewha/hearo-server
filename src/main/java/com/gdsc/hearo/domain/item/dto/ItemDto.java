@@ -1,17 +1,19 @@
 package com.gdsc.hearo.domain.item.dto;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryResponseDto {
+public class ItemDto {
 
-    private Integer itemCount;
-    private List<ItemDto> list;
+    private Long id;
+    private String name;
+    private String img;
+    private String info;
+    private int price;
 }
