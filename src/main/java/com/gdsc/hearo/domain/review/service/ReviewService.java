@@ -5,7 +5,7 @@ import com.gdsc.hearo.domain.item.repository.ItemRepository;
 import com.gdsc.hearo.domain.member.entity.MemberSetting;
 import com.gdsc.hearo.domain.member.repository.MemberSettingRepository;
 import com.gdsc.hearo.domain.review.dto.ReviewDto;
-import com.gdsc.hearo.domain.review.dto.ReviewTTSRequestDto;
+import com.gdsc.hearo.domain.review.dto.ReviewTTSDto;
 import com.gdsc.hearo.domain.review.entity.Review;
 import com.gdsc.hearo.domain.review.entity.ReviewTts;
 import com.gdsc.hearo.domain.review.repository.ReviewRepository;
@@ -46,7 +46,7 @@ public class ReviewService {
     /*
         리뷰 TTS 음성 파일 저장 (긍정적인 리뷰 요약, 부정적인 리뷰 요약)
      */
-    public void saveReviewTTS(@Nullable CustomUserDetails user, Long itemId, ReviewTTSRequestDto request) throws BaseException {
+    public void saveReviewTTS(@Nullable CustomUserDetails user, Long itemId, ReviewTTSDto request) throws BaseException {
         if (user != null) { // 로그인한 경우
             Item item = itemRepository.findById(itemId).orElse(null);
 
@@ -95,5 +95,48 @@ public class ReviewService {
 
         }
 
+    }
+
+    public ReviewTTSDto getReviewTTS(@Nullable CustomUserDetails user, Long itemId) throws BaseException {
+        if (user != null) { // 로그인한 경우
+
+            Long settingId = user.getMember().getMemberSetting().getSettingId();
+            MemberSetting memberSetting = memberSettingRepository.findById(settingId).orElse(null);
+            VoiceType voiceType = memberSetting.getVoiceType();
+
+            // 로그인한 사용자 음성 타입에 맞는 최신 음성 반환
+            ReviewTts positiveReviewTts = reviewTtsRepository.findTopByItemItemIdAndReviewTypeAndVoiceTypeOrderByCreatedAtDesc(
+                    itemId, ReviewTts.ReviewType.POSITIVE, voiceType);
+            ReviewTts negativeReviewTts = reviewTtsRepository.findTopByItemItemIdAndReviewTypeAndVoiceTypeOrderByCreatedAtDesc(
+                    itemId, ReviewTts.ReviewType.NEGATIVE, voiceType);
+
+            if (positiveReviewTts == null || negativeReviewTts == null) {
+                throw new BaseException(BaseResponseStatus.NO_REVIEW_TTS_FILE);
+            }
+
+            ReviewTTSDto reviewTTSDto = ReviewTTSDto.builder()
+                    .positiveReviewUrl(positiveReviewTts.getTtsFile())
+                    .negativeReviewUrl(negativeReviewTts.getTtsFile())
+                    .build();
+
+            return reviewTTSDto;
+        } else {
+
+            ReviewTts positiveReviewTts = reviewTtsRepository.findTopByItemItemIdAndReviewTypeAndVoiceTypeOrderByCreatedAtDesc(
+                    itemId, ReviewTts.ReviewType.POSITIVE, VoiceType.MALE_VOICE);
+            ReviewTts negativeReviewTts = reviewTtsRepository.findTopByItemItemIdAndReviewTypeAndVoiceTypeOrderByCreatedAtDesc(
+                    itemId, ReviewTts.ReviewType.NEGATIVE, VoiceType.MALE_VOICE);
+
+            if (positiveReviewTts == null || negativeReviewTts == null) {
+                throw new BaseException(BaseResponseStatus.NO_REVIEW_TTS_FILE);
+            }
+
+            ReviewTTSDto reviewTTSDto = ReviewTTSDto.builder()
+                    .positiveReviewUrl(positiveReviewTts.getTtsFile())
+                    .negativeReviewUrl(negativeReviewTts.getTtsFile())
+                    .build();
+
+            return reviewTTSDto;
+        }
     }
 }

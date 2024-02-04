@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ReviewTTSRequestDto {
+public class ReviewTTSDto {
     private String positiveReviewUrl;
     private String negativeReviewUrl;
 }
