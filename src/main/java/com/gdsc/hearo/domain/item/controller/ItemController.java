@@ -1,14 +1,15 @@
 package com.gdsc.hearo.domain.item.controller;
 
-import com.gdsc.hearo.domain.item.dto.CategoryResponseDto;
-import com.gdsc.hearo.domain.item.dto.ItemDto;
-import com.gdsc.hearo.domain.item.dto.SearchResponseDto;
+import com.gdsc.hearo.domain.item.dto.*;
 import com.gdsc.hearo.domain.item.service.ItemService;
+import com.gdsc.hearo.domain.item.service.WishService;
 import com.gdsc.hearo.global.common.BaseResponse;
 import com.gdsc.hearo.global.common.BaseResponseStatus;
+import com.gdsc.hearo.global.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 public class ItemController {
     
     private final ItemService itemService;
+
     
     @Autowired
     public ItemController(ItemService itemService){
@@ -102,7 +104,6 @@ public class ItemController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-
 
 
 }
