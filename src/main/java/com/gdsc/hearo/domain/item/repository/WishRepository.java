@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface WishRepository extends JpaRepository<Wish,Long> {
 
-    //List<Wish> findByMemberAndItem(Member member, Item item);
+    List<Wish> findByMember_MemberId(Long memberId);
 }

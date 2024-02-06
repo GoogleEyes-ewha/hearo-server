@@ -1,5 +1,6 @@
 package com.gdsc.hearo.domain.item.controller;
 
+import com.gdsc.hearo.domain.item.dto.WishListResponseDto;
 import com.gdsc.hearo.domain.item.dto.WishRequestDto;
 import com.gdsc.hearo.domain.item.dto.WishResponseDto;
 import com.gdsc.hearo.domain.item.service.WishService;
@@ -35,10 +36,30 @@ public class WishController {
 
             response = new BaseResponse<>(BaseResponseStatus.SUCCESS, result);
             return ResponseEntity.ok(response);
+
         }catch (Exception e){
             response = new BaseResponse<>(BaseResponseStatus.INTERNAL_SERVER_ERROR, null);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @GetMapping
+    public ResponseEntity<BaseResponse<WishListResponseDto>> getWishList(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        BaseResponse<WishListResponseDto> response;
+
+        try {
+            Long userId = userDetails.getMember().getMemberId();
+            WishListResponseDto result = wishService.getWishList(userId);
+
+            response = new BaseResponse<>(BaseResponseStatus.SUCCESS, result);
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            response = new BaseResponse<>(BaseResponseStatus.INTERNAL_SERVER_ERROR, null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+
 
 }
