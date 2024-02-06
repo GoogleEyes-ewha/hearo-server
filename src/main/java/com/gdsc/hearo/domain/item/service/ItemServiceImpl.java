@@ -3,6 +3,7 @@ package com.gdsc.hearo.domain.item.service;
 import com.gdsc.hearo.domain.item.dto.ItemDto;
 import com.gdsc.hearo.domain.item.entity.Item;
 import com.gdsc.hearo.domain.item.repository.ItemRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,4 +47,10 @@ public class ItemServiceImpl implements ItemService  {
                 item.getPrice()
         );
     }
+
+    /*@Override
+    public Item findItemById(Long itemId) {
+        return itemRepository.findById(itemId)
+                .orElseThrow(() -> new EntityNotFoundException("상품이 없습니다."));
+    }*/
 }
