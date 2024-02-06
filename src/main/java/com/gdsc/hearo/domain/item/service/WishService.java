@@ -11,7 +11,6 @@ import com.gdsc.hearo.domain.item.repository.WishRepository;
 import com.gdsc.hearo.domain.member.entity.Member;
 import com.gdsc.hearo.domain.member.repository.MemberRepository;
 import com.gdsc.hearo.domain.member.service.MemberService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
