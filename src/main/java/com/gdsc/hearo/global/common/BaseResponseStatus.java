@@ -26,6 +26,7 @@ public enum BaseResponseStatus {
     RESPONSE_ERROR(3000, false, "값을 불러오는데 실패하였습니다."),
     INVALID_USER_ID(3001, false, "아이디가 존재하지 않습니다."),
     FAILED_TO_LOGIN(3002, false, "비밀번호가 일치하지 않습니다."),
+    DUPICATE_USER_ID(3003, false, "이미 존재하는 아이디입니다."),
 
     // 3100~ : item 관련 오류
     NO_CONTENT(3100, false, "상품이 존재하지 않습니다."),
