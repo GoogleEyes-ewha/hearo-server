@@ -24,7 +24,7 @@ public class WishController {
         this.wishService = wishService;
     }
 
-    @PostMapping
+    @PostMapping/*wishRequestDto가 꼭필요한가?*/
     public ResponseEntity<BaseResponse<WishResponseDto>> addToWishList(@AuthenticationPrincipal CustomUserDetails userDetails,
 
                                                                        @RequestBody WishRequestDto wishRequestDto){
@@ -58,6 +58,29 @@ public class WishController {
             response = new BaseResponse<>(BaseResponseStatus.INTERNAL_SERVER_ERROR, null);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
+    }
+
+
+
+    @DeleteMapping("/{itemId}")
+    public ResponseEntity<BaseResponse<WishResponseDto>> deleteFromWishList(
+        @AuthenticationPrincipal CustomUserDetails userDetails,
+                @PathVariable(name = "itemId") Long itemId){
+
+        BaseResponse<WishResponseDto> response;
+
+        try{
+            Long userId = userDetails.getMember().getMemberId();
+            WishResponseDto result = wishService.removeFromWishList(userId, itemId);
+            //wishService.deleteFromWishList(userDetails.getMember().getMemberId(),itemId);
+
+            response = new BaseResponse<>(BaseResponseStatus.SUCCESS, result);
+            return ResponseEntity.ok(response);
+        }catch(Exception e){
+            response = new BaseResponse<>(BaseResponseStatus.INTERNAL_SERVER_ERROR, null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+
     }
 
 
