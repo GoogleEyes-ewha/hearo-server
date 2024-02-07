@@ -14,8 +14,10 @@ public enum BaseResponseStatus {
     /*
         2000~ : Request 오류
      */
-
-
+    // 2000~ : user 관련 오류
+    INVALID_TOKEN(2000, false, "유효하지 않은 토큰입니다."),
+    EXPIRED_TOKEN(2001, false, "만료된 토큰 정보입니다."),
+    UNSUPPORTED_TOKEN(2002, false, "지원하지 않는 토큰 방식입니다."),
 
 
     // =====================================
@@ -26,6 +28,8 @@ public enum BaseResponseStatus {
     RESPONSE_ERROR(3000, false, "값을 불러오는데 실패하였습니다."),
     INVALID_USER_ID(3001, false, "아이디가 존재하지 않습니다."),
     FAILED_TO_LOGIN(3002, false, "비밀번호가 일치하지 않습니다."),
+    DUPICATE_USER_ID(3003, false, "이미 존재하는 아이디입니다."),
+    ACCESS_DENIED(3004, false, "알 수 없는 이유로 요청이 거절되었습니다."),
 
     // 3100~ : item 관련 오류
     NO_CONTENT(3100, false, "상품이 존재하지 않습니다."),
