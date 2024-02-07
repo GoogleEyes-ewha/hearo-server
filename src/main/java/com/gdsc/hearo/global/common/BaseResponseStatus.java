@@ -9,7 +9,7 @@ public enum BaseResponseStatus {
         1000 : Request 성공
      */
     SUCCESS(1000, true, "요청에 성공하였습니다."),
-
+    JWT_VERIFIED(1000, true, "유효한 액세스 토큰입니다."),
 
     /*
         2000~ : Request 오류
@@ -30,6 +30,7 @@ public enum BaseResponseStatus {
     FAILED_TO_LOGIN(3002, false, "비밀번호가 일치하지 않습니다."),
     DUPICATE_USER_ID(3003, false, "이미 존재하는 아이디입니다."),
     ACCESS_DENIED(3004, false, "알 수 없는 이유로 요청이 거절되었습니다."),
+    EXPIRED_REFRESH_TOKEN(3005, false, "만료된 refresh token 입니다."),
 
     // 3100~ : item 관련 오류
     NO_CONTENT(3100, false, "상품이 존재하지 않습니다."),
