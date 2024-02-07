@@ -12,3 +12,5 @@ import lombok.NoArgsConstructor;
 public class WishResponseDto {
     private String result;
 }
+
+//상품 위시리스트에 추가할때도 삭제할 때도 쓰임

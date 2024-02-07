@@ -10,9 +10,9 @@ import com.gdsc.hearo.domain.item.repository.ItemRepository;
 import com.gdsc.hearo.domain.item.repository.WishRepository;
 import com.gdsc.hearo.domain.member.entity.Member;
 import com.gdsc.hearo.domain.member.repository.MemberRepository;
-import com.gdsc.hearo.domain.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -75,5 +75,29 @@ public class WishService {
         }
 
 
+    }
+
+    @Transactional
+    public WishResponseDto removeFromWishList(Long userId, Long itemId){
+        try {
+            Item item = itemRepository.findById(itemId)
+                    .orElseThrow(() -> new RuntimeException("상품을 찾을 수 없습니다."));
+
+
+            Member member = memberRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("회원을 찾을 수 없습니다."));
+
+            wishRepository.deleteByMemberAndItem(member,item);
+
+            return WishResponseDto.builder()
+                    .result("위시리스트에서 상품을 삭제하였습니다.")
+                    .build();
+        }catch(Exception e) {
+            e.printStackTrace();
+
+            return WishResponseDto.builder()
+                    .result("서버 오류")
+                    .build();
+        }
     }
 }
