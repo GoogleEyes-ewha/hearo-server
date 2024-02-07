@@ -1,11 +1,14 @@
 package com.gdsc.hearo.domain.member.service;
 
 import com.gdsc.hearo.domain.member.dto.LoginRequestDto;
+import com.gdsc.hearo.domain.member.dto.LoginResponseDto;
+import com.gdsc.hearo.domain.member.dto.ReissueRequestDto;
 import com.gdsc.hearo.domain.member.dto.SignupRequestDto;
 import com.gdsc.hearo.domain.member.entity.Member;
 import com.gdsc.hearo.domain.member.repository.MemberRepository;
 import com.gdsc.hearo.global.common.BaseException;
 import com.gdsc.hearo.global.common.BaseResponseStatus;
+import com.gdsc.hearo.global.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     public Member signup(SignupRequestDto request) throws BaseException {
         String loginId = request.getLoginId();
@@ -56,5 +60,18 @@ public class MemberService {
         }
 
         return member;
+    }
+
+    public LoginResponseDto reissue(ReissueRequestDto request) throws BaseException {
+        if (jwtUtil.validAccessToken(request.getAccessToken())) {
+            throw new BaseException(BaseResponseStatus.JWT_VERIFIED);
+        } else if (jwtUtil.validRefreshToken(request.getRefreshToken())) {
+            String loginId  = jwtUtil.getLoginId(request.getRefreshToken());
+            String newAccessToken = jwtUtil.createAccessToken(loginId);
+
+            return new LoginResponseDto(newAccessToken, request.getRefreshToken());
+        } else {
+            throw new BaseException(BaseResponseStatus.EXPIRED_REFRESH_TOKEN);
+        }
     }
 }

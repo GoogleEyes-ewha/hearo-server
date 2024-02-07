@@ -83,4 +83,23 @@ public class JwtUtil {
         }
     }
 
+    // Access Token 유효성 + 만료일자 확인
+    public boolean validAccessToken(String accessToken) {
+        try {
+            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(accessToken);
+            return !claims.getBody().getExpiration().before(new Date());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    // Refresh Token의 유효성 + 만료일자 확인
+    public boolean validRefreshToken(String refreshToken) {
+        try {
+            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(refreshToken);
+            return !claims.getBody().getExpiration().before(new Date());
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }
