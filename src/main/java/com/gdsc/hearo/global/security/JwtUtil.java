@@ -1,57 +1,53 @@
 package com.gdsc.hearo.global.security;
 
-import com.gdsc.hearo.domain.member.entity.Member;
-import com.gdsc.hearo.domain.member.repository.MemberRepository;
+import com.gdsc.hearo.global.common.BaseResponseStatus;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.security.Key;
-import java.time.ZonedDateTime;
 import java.util.Date;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtUtil {
-    private final Key key;
-    private final long accessTokenExpTime;
-    private final long refreshTokenExpTime;
-    private final MemberRepository memberRepository;
 
-    public JwtUtil(
-            @Value("${spring.jwt.secret}") String secretKey, @Value("${spring.jwt.tokenExpirationTime}") long accessTokenExpTime, @Value("${spring.jwt.refreshTokenExpTime}") long refreshTokenExpTime, MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        this.key = Keys.hmacShaKeyFor(keyBytes);
-        this.accessTokenExpTime = accessTokenExpTime; // 2시간
-        this.refreshTokenExpTime = refreshTokenExpTime; // 1주일
-    }
+
+    @Value("${spring.jwt.secret}")
+    private String secretKey;
+
+    @Value("${spring.jwt.tokenExpirationTime}")
+    private Long ACCESS_TOKEN_EXP_TIME;
+
+    @Value("${spring.jwt.refreshTokenExpTime}")
+    private Long REFRESH_TOKEN_EXP_TIME;
+
 
     // Access Token 생성
     public String createAccessToken(String loginId) {
-        return createToken(loginId, accessTokenExpTime);
+        return createToken(loginId, ACCESS_TOKEN_EXP_TIME);
     }
 
     // refresh Token 생성
     public String createRefreshToken(String loginId) {
-        return createToken(loginId, refreshTokenExpTime);
+        return createToken(loginId, REFRESH_TOKEN_EXP_TIME);
     }
 
     // JWT 생성
     public String createToken(String loginId, long expTime) {
         Claims claims = Jwts.claims().setSubject(loginId);
 
-        ZonedDateTime now = ZonedDateTime.now();
-        ZonedDateTime tokenValidity = now.plusSeconds(expTime);
+
+        Date now = new Date();
+        Date tokenValidity = new Date(now.getTime() + expTime); // 만료 시간
 
         return Jwts.builder()
                 .setClaims(claims)
-                .setIssuedAt(Date.from(now.toInstant()))
-                .setExpiration(Date.from(tokenValidity.toInstant()))
-                .signWith(key, SignatureAlgorithm.HS256)
+                .setIssuedAt(now)
+                .setExpiration(tokenValidity)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
 
@@ -59,34 +55,32 @@ public class JwtUtil {
     // JWT Claims 추출
     public Claims parseClaims(String accessToken) {
         try {
-            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
+            return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(accessToken).getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
     }
 
-    // Token에서 Member 객체 생성
-    public Member getMember(String token) {
-        String loginId = parseClaims(token).getSubject();
-        Member member = memberRepository.findByLoginId(loginId);
-
-        return member;
+    // 토큰에서 loginId 추출
+    public String getLoginId(String token) {
+        return parseClaims(token).getSubject();
     }
+
 
     // JWT 검증
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info("Invalid JWT Token", e);
+            throw new JwtException(BaseResponseStatus.INVALID_TOKEN.getMessage());
         } catch (ExpiredJwtException e) {
-            log.info("Expired JWT Token", e);
+            throw new JwtException(BaseResponseStatus.EXPIRED_TOKEN.getMessage());
         } catch (UnsupportedJwtException e) {
-            log.info("Unsupported JWT Token", e);
+            throw new JwtException(BaseResponseStatus.UNSUPPORTED_TOKEN.getMessage());
         } catch (IllegalArgumentException e) {
-            log.info("JWT claims string is empty.", e);
+            throw new JwtException(BaseResponseStatus.ACCESS_DENIED.getMessage());
         }
-        return false;
     }
+
 }

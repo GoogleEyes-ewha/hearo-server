@@ -46,7 +46,7 @@ public class MemberController {
         try {
             Member member = memberService.login(request);
 
-            String accessToken = jwtUtil.createRefreshToken(member.getLoginId());
+            String accessToken = jwtUtil.createAccessToken(member.getLoginId());
             String refreshToken = jwtUtil.createRefreshToken(member.getLoginId());
 
             LoginResponseDto loginResponseDto = new LoginResponseDto(accessToken, refreshToken);
