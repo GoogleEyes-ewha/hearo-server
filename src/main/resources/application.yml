@@ -18,3 +18,8 @@ spring:
     refreshTokenExpTime: ${JWT_REFRESH_TOKEN_EXPIRATION_TIME}
     secret: ${JWT_SECRET_KEY}
 
+gemini:
+  api:
+    url: ${GEMINI_URL}
+    key: ${GEMINI_KEY}
+
