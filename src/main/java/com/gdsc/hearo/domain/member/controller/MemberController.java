@@ -56,6 +56,18 @@ public class MemberController {
         }
     }
 
+    // [Post] 액세스 토큰 재발급
+    @PostMapping("/reissue")
+    public BaseResponse<?> refreshToken(@RequestBody ReissueRequestDto request) {
+        try {
+            LoginResponseDto loginResponseDto = memberService.reissue(request);
+
+            return new BaseResponse<>(BaseResponseStatus.SUCCESS, loginResponseDto);
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
     // [Post] 사용자 맞춤 설정 등록
     @PostMapping("/custom")
     public BaseResponse<?> customSetting(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody CustomRequestDto request) {
@@ -81,4 +93,5 @@ public class MemberController {
 
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, "사용자 맞춤 설정이 수정되었습니다.");
     }
+
 }
