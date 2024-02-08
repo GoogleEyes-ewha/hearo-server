@@ -1,9 +1,6 @@
 package com.gdsc.hearo.domain.member.service;
 
-import com.gdsc.hearo.domain.member.dto.LoginRequestDto;
-import com.gdsc.hearo.domain.member.dto.LoginResponseDto;
-import com.gdsc.hearo.domain.member.dto.ReissueRequestDto;
-import com.gdsc.hearo.domain.member.dto.SignupRequestDto;
+import com.gdsc.hearo.domain.member.dto.*;
 import com.gdsc.hearo.domain.member.entity.Member;
 import com.gdsc.hearo.domain.member.repository.MemberRepository;
 import com.gdsc.hearo.global.common.BaseException;
@@ -73,5 +70,15 @@ public class MemberService {
         } else {
             throw new BaseException(BaseResponseStatus.EXPIRED_REFRESH_TOKEN);
         }
+    }
+
+    public UserInfoResponseDto getUserInfo(Member nowUser) throws BaseException {
+
+        UserInfoResponseDto userInfoResponseDto = UserInfoResponseDto.builder()
+                .loginId(nowUser.getLoginId())
+                .username(nowUser.getUsername())
+                .build();
+
+        return userInfoResponseDto;
     }
 }
