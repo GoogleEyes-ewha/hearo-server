@@ -68,19 +68,30 @@ public class MemberController {
         }
     }
 
+    // [Get] 사용자 정보 조회
+    @GetMapping("/info")
+    public BaseResponse<?> userInfo(@AuthenticationPrincipal CustomUserDetails user) {
+        try {
+            return new BaseResponse<>(BaseResponseStatus.SUCCESS, memberService.getUserInfo(user.getMember()));
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+
+    }
+
     // [Post] 사용자 맞춤 설정 등록
     @PostMapping("/custom")
-    public BaseResponse<?> customSetting(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody CustomRequestDto request) {
+    public BaseResponse<?> customSetting(@AuthenticationPrincipal CustomUserDetails user, @RequestBody CustomRequestDto request) {
 
-        memberSettingService.postUserCustom(userDetails.getMember(), request);
+        memberSettingService.postUserCustom(user.getMember(), request);
 
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, "사용자 맞춤 설정 되었습니다.");
     }
 
     // [Get] 사용자 맞춤 설정 조회
     @GetMapping("/custom")
-    public BaseResponse<?> getCustomSetting(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        MemberSetting setting = memberSettingService.getUserCustom(userDetails.getMember());
+    public BaseResponse<?> getCustomSetting(@AuthenticationPrincipal CustomUserDetails user) {
+        MemberSetting setting = memberSettingService.getUserCustom(user.getMember());
         CustomResponseDto customResponseDto = new CustomResponseDto(setting.getDisabilityType(), setting.getFontSize(), setting.getVoiceType(), setting.getScreenType(), setting.getComponentType());
 
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, customResponseDto);
@@ -88,8 +99,8 @@ public class MemberController {
 
     // [Patch] 사용자 맞춤 설정 수정
     @PatchMapping("/custom/edit")
-    public BaseResponse<?> editCustomSetting(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody CustomEditResponseDto request) {
-        memberSettingService.editUserCustom(userDetails.getMember(), request);
+    public BaseResponse<?> editCustomSetting(@AuthenticationPrincipal CustomUserDetails user, @RequestBody CustomEditResponseDto request) {
+        memberSettingService.editUserCustom(user.getMember(), request);
 
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, "사용자 맞춤 설정이 수정되었습니다.");
     }
