@@ -6,6 +6,7 @@ import com.gdsc.hearo.domain.item.service.WishService;
 import com.gdsc.hearo.global.common.BaseResponse;
 import com.gdsc.hearo.global.common.BaseResponseStatus;
 import com.gdsc.hearo.global.security.CustomUserDetails;
+import com.google.api.gax.rpc.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -50,7 +51,7 @@ public class ItemController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }*/
-    @GetMapping("/{categoryId}")
+    @GetMapping("/category/{categoryId}")
     public ResponseEntity<BaseResponse<CategoryResponseDto>> getItemByCategory(@PathVariable(name = "categoryId") Long categoryId) {
         BaseResponse<CategoryResponseDto> response;
 
@@ -104,6 +105,25 @@ public class ItemController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @GetMapping("/{itemId}")
+    public ResponseEntity<BaseResponse<ItemDetailResponseDto>> getItemDetailById(@PathVariable(name = "itemId") Long itemId) {
+        BaseResponse<ItemDetailResponseDto> response;
+
+        try {
+            ItemDetailResponseDto itemDetailResponse = itemService.getItemDetailById(itemId);
+
+            response = new BaseResponse<>(BaseResponseStatus.SUCCESS, itemDetailResponse);
+            return ResponseEntity.ok(response);
+
+        }catch (Exception e) {
+            // Handle exceptions
+            response = new BaseResponse<>(BaseResponseStatus.INTERNAL_SERVER_ERROR, null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+
 
 
 }

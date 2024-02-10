@@ -18,3 +18,12 @@ spring:
     refreshTokenExpTime: ${JWT_REFRESH_TOKEN_EXPIRATION_TIME}
     secret: ${JWT_SECRET_KEY}
 
+  application:
+    name: document-ai-api
+    server:
+      port: 8080
+    cloud:
+      gcp:
+        project-id: ${spring.cloud.gcp.project-id}
+        credentials:
+          location: ${spring.cloud.gcp.credentials.location}
