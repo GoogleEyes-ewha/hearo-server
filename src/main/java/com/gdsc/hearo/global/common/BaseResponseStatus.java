@@ -37,6 +37,7 @@ public enum BaseResponseStatus {
 
     // 3200~ : review 관련 오류
     NO_REVIEW_CONTENT(3200, false, "리뷰가 존재하지 않습니다."),
+    INVALID_REVIEW_SUMMARY(3201, false, "오류가 발생했습니다. 다시 요청해 주세요."),
 
     // 3300~ : TTS 관련 오류
     NO_REVIEW_TTS_FILE(3300, false, "리뷰 요약 음성 파일이 존재하지 않습니다."),

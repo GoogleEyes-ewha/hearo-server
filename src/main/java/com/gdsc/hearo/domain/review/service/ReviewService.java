@@ -176,7 +176,7 @@ public class ReviewService {
 
         // 프롬프트 생성
         String prompt = String.format(
-                "Understand the content of the list of reviews and then restructure the review contents to provide a summarized overall opinion in one or two sentence. This summary should be divided into a positive review summary and a negative review summary. Tag these summaries with [POS] for positive and [NEG] for negative. Each summary can be composed of up to 200 words.%n%nReview list: %s",
+                "Understand the content of the list of reviews and then restructure the review contents to provide a summarized overall opinion in one or two complete sentence. This summary should be divided into a positive review summary and a negative review summary. Tag these summaries with [POS] for positive and [NEG] for negative. Each summary can be composed of up to 200 words.%n%nReview list: %s",
                 String.join("\n", reviewTextList)
         );
 
@@ -200,6 +200,10 @@ public class ReviewService {
             } else if (review.trim().startsWith("[NEG]")) {
                 negativeReview = trimmedReview.substring("[NEG]".length()).trim();
             }
+        }
+
+        if (positiveReview.isEmpty() && negativeReview.isEmpty()) {
+            throw new BaseException(BaseResponseStatus.INVALID_REVIEW_SUMMARY);
         }
 
         SummaryResponseDto summaryResponseDto = SummaryResponseDto.builder()
