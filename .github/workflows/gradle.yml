@@ -34,6 +34,12 @@ jobs:
         echo "${{ secrets.APPLICATION }}" > ./application.yml
       shell: bash
       
+    - name: Download keystore.p12
+      run: |
+        cd ./src/main/resources
+        touch ./keystore.p12
+        echo "${{ secrets.KEYSTORE }}" | base64 -d > ./keystore.p12
+        
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
