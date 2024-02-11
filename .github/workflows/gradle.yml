@@ -48,6 +48,13 @@ jobs:
         echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS}}" > ./credentials.json
       shell: bash 
       
+    - name: Set up environment
+      run: |
+        cd ./src/main/resources
+        echo "GOOGLE_APPLICATION_CREDENTIALS=./credentials.json" >> $GITHUB_ENV
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: ./credentials.json
+        
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
