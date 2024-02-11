@@ -39,7 +39,15 @@ jobs:
         cd ./src/main/resources
         touch ./keystore.p12
         echo "${{ secrets.KEYSTORE }}" | base64 -d > ./keystore.p12
+      shell: bash 
         
+    - name: google application credentials
+      run: |
+        cd ./src/main/resources
+        touch ./credentials.json
+        echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS}}" > ./credentials.json
+      shell: bash 
+      
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
