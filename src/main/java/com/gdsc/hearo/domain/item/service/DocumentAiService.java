@@ -1,6 +1,6 @@
 package com.gdsc.hearo.domain.item.service;
 
-import com.gdsc.hearo.QuickStart;
+
 import com.google.cloud.documentai.v1.*;
 import com.google.protobuf.ByteString;
 import org.springframework.beans.factory.annotation.Value;
