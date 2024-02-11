@@ -17,13 +17,17 @@ spring:
     tokenExpirationTime: ${JWT_TOKEN_EXPIRATION_TIME}
     refreshTokenExpTime: ${JWT_REFRESH_TOKEN_EXPIRATION_TIME}
     secret: ${JWT_SECRET_KEY}
-    
+  google:
+    url: https://accounts.google.com/o/oauth2/v2/auth
+    client-id: ${GOOGLE_CLIENT_ID}
+    callback: ${GOOGLE_REDIRECT_URL}
+    secret: ${GOOGLE_CLIENT_SECRET}
+    token: https://oauth2.googleapis.com/token
 gemini:
   api:
     url: ${GEMINI_URL}
     key: ${GEMINI_KEY}
-server:
-  ssl:
-    key-store: /etc/letsencrypt/live/hearo-server.shop/keystore.p12
-    key-store-type: PKCS12
-    key-store-password: ${KEY_STORE_PASSWORD}
+document:
+  project-id: ${DOCUMENT_PROJECT_ID}
+  location: us
+  parser: ${DOCUMENT_PARSER}

@@ -3,29 +3,28 @@ package com.gdsc.hearo.domain.item.service;
 
 import com.google.cloud.documentai.v1.*;
 import com.google.protobuf.ByteString;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.net.URL;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
-import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class DocumentAiService {
-    @Value("${ai.project.id}")
+    @Value("${document.project-id}")
     private String projectId;
-    @Value("${ai.location}")
+    @Value("${document.location}")
     private String location;
-    @Value("${ai.parser}")
+    @Value("${document.parser}")
     private String parser;
-
-
 
     public Processor syncCreateProcessor() throws Exception {
         String uuid = UUID.randomUUID().toString();

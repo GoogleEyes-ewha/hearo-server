@@ -4,12 +4,9 @@ import com.gdsc.hearo.domain.item.dto.ItemDetailResponseDto;
 import com.gdsc.hearo.domain.item.dto.ItemDto;
 import com.gdsc.hearo.domain.item.entity.Item;
 import com.gdsc.hearo.domain.item.repository.ItemRepository;
-import com.google.api.gax.rpc.NotFoundException;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
