@@ -105,10 +105,13 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           # 도커 작업
           script: |
+            script: |
             docker pull ${{ secrets.DOCKER_USERNAME }}/hearo:latest
             docker stop $(docker ps -a -q)
-            docker run -d --log-driver=syslog -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/hearo:latest
+            docker run -d --log-driver=syslog -p 8080:8080 \
+            -e GOOGLE_APPLICATION_CREDENTIALS="${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" \
+              ${{ secrets.DOCKER_USERNAME }}/hearo:latest
             docker rm $(docker ps --filter 'status=exited' -a -q)
             docker image prune -a -f
-  
+            
             
