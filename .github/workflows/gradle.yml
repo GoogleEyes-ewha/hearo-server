@@ -113,8 +113,8 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/hearo:latest
             docker stop $(docker ps -a -q)
             docker run -d --log-driver=syslog -p 8080:8080 \
-                -v "$HOME/.config/gcloud/application_default_credentials.json":/gcp/creds.json:ro \
-                --env GOOGLE_APPLICATION_CREDENTIALS=/gcp/creds.json \
+                -v "$HOME/.config/gcloud/":/gcp/:ro \
+                -e GOOGLE_APPLICATION_CREDENTIALS=/gcp/application_default_credentials.json \
                 ${{ secrets.DOCKER_USERNAME }}/hearo:latest
             docker rm $(docker ps --filter 'status=exited' -a -q)
             docker image prune -a -f
