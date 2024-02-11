@@ -25,7 +25,6 @@ public class ReviewController {
     // [Get] 전체 리뷰 조회
     @GetMapping("/{itemId}/list")
     public BaseResponse<?> getReviewList(@PathVariable Long itemId) {
-
         try {
             List<ReviewDto> reviewList = reviewService.getReviewLists(itemId);
             ReviewListResponseDto reviewListResponseDto = new ReviewListResponseDto(reviewList.size(), reviewList);
@@ -36,10 +35,19 @@ public class ReviewController {
         }
     }
 
+    // [Get] 리뷰 요약 텍스트 조회
+    @GetMapping("/{itemId}")
+    public BaseResponse<?> reviewSummary(@PathVariable Long itemId) {
+        try {
+            return new BaseResponse<>(BaseResponseStatus.SUCCESS, reviewService.getReviewSummary(itemId));
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
     // [Post] 리뷰 tts 파일 저장
     @PostMapping("/tts/{itemId}")
     public BaseResponse<?> postReviewTTSFile(@AuthenticationPrincipal CustomUserDetails user, @PathVariable Long itemId, @RequestBody ReviewTTSDto request) {
-
         try {
             if (user != null) { // 로그인 한 경우
                 reviewService.saveReviewTTS(user, itemId, request);
@@ -73,6 +81,4 @@ public class ReviewController {
             return new BaseResponse<>(e.getStatus());
         }
     }
-
-
 }
