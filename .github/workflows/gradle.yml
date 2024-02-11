@@ -105,7 +105,6 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           # 도커 작업
           script: |
-            script: |
             docker pull ${{ secrets.DOCKER_USERNAME }}/hearo:latest
             docker stop $(docker ps -a -q)
             docker run -d --log-driver=syslog -p 8080:8080 \
