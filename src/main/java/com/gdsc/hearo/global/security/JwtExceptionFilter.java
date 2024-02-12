@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -28,11 +29,11 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
         try {
             chain.doFilter(request, response);
         } catch (JwtException | IOException | ServletException ex) {
-            setErrorResponse(request, response, ex);
+            setErrorResponse(HttpStatus.UNAUTHORIZED, response, ex);
         }
     }
 
-    public void setErrorResponse(HttpServletRequest req, HttpServletResponse res, Throwable ex) throws IOException {
+    public void setErrorResponse(HttpStatus status, HttpServletResponse res, Throwable ex) throws IOException {
 
         res.setContentType(MediaType.APPLICATION_JSON_VALUE);
         if (ex.getMessage().equals(BaseResponseStatus.INVALID_TOKEN.getMessage())) {
@@ -50,8 +51,8 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
         body.put("inSuccess", false);
         body.put("message", ex.getMessage());
         body.put("result", "Unauthorized error");
+        res.setStatus(status.value());
 
         objectMapper.writeValue(res.getOutputStream(), body);
-        res.setStatus(HttpServletResponse.SC_OK);
     }
 }
