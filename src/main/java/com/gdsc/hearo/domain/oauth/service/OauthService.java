@@ -43,9 +43,6 @@ public class OauthService {
 
         Member member = memberRepository.findByLoginId(email);
 
-        if (member != null) {
-            throw new BaseException(BaseResponseStatus.DUPICATE_USER_ID);
-        }
         Member newMember = Member.builder()
                 .username(username)
                 .loginId(email)
@@ -53,7 +50,10 @@ public class OauthService {
                 .loginType(Member.LoginType.GOOGLE)
                 .build();
 
-        memberRepository.save(newMember);
+        // 저장 안 된 사용자일 경우
+        if (member == null) {
+            memberRepository.save(newMember);
+        }
 
         return newMember;
     }
