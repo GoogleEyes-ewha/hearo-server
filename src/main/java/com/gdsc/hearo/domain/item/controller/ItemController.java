@@ -2,11 +2,9 @@ package com.gdsc.hearo.domain.item.controller;
 
 import com.gdsc.hearo.domain.item.dto.*;
 import com.gdsc.hearo.domain.item.service.ItemService;
-import com.gdsc.hearo.domain.item.service.WishService;
 import com.gdsc.hearo.global.common.BaseResponse;
 import com.gdsc.hearo.global.common.BaseResponseStatus;
 import com.gdsc.hearo.global.security.CustomUserDetails;
-import com.google.api.gax.rpc.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -107,11 +105,14 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ResponseEntity<BaseResponse<ItemDetailResponseDto>> getItemDetailById(@PathVariable(name = "itemId") Long itemId) {
+    public ResponseEntity<BaseResponse<ItemDetailResponseDto>> getItemDetailById(
+            @PathVariable(name = "itemId") Long itemId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         BaseResponse<ItemDetailResponseDto> response;
 
         try {
-            ItemDetailResponseDto itemDetailResponse = itemService.getItemDetailById(itemId);
+            Long userId = userDetails != null? userDetails.getMember().getMemberId():null;
+            ItemDetailResponseDto itemDetailResponse = itemService.getItemDetailById(itemId,userId);
 
             response = new BaseResponse<>(BaseResponseStatus.SUCCESS, itemDetailResponse);
             return ResponseEntity.ok(response);

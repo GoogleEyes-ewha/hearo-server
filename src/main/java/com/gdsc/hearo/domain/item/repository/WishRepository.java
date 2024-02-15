@@ -13,4 +13,5 @@ public interface WishRepository extends JpaRepository<Wish,Long> {
 
     //void deleteByMember_MemberIdAndItem_ItemId(Long memberId, Long itemId);
     void deleteByMemberAndItem(Member member,Item item);
+
 }

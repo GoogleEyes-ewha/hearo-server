@@ -31,6 +31,7 @@ public enum BaseResponseStatus {
     DUPICATE_USER_ID(3003, false, "이미 존재하는 아이디입니다."),
     ACCESS_DENIED(3004, false, "알 수 없는 이유로 요청이 거절되었습니다."),
     EXPIRED_REFRESH_TOKEN(3005, false, "만료된 refresh token 입니다."),
+    FAILED_TO_FIND_USER(3006,false,"존재하지 않는 회원입니다."),
 
     // 3100~ : item 관련 오류
     NO_CONTENT(3100, false, "상품이 존재하지 않습니다."),
@@ -41,6 +42,9 @@ public enum BaseResponseStatus {
 
     // 3300~ : TTS 관련 오류
     NO_REVIEW_TTS_FILE(3300, false, "리뷰 요약 음성 파일이 존재하지 않습니다."),
+
+    //3400~ : wishList 관련 오류
+    DUPICATE_ITEM(3400,false,"이미 위시리스트에 존재하는 상품입니다."),
 
 
     // =====================================
