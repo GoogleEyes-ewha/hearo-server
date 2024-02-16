@@ -1,8 +1,8 @@
 package com.gdsc.hearo.domain.item.service;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
 import com.gdsc.hearo.domain.item.dto.ItemDto;
 import com.gdsc.hearo.domain.item.dto.WishListResponseDto;
-import com.gdsc.hearo.domain.item.dto.WishRequestDto;
 import com.gdsc.hearo.domain.item.dto.WishResponseDto;
 import com.gdsc.hearo.domain.item.entity.Item;
 import com.gdsc.hearo.domain.item.entity.Wish;
@@ -10,6 +10,8 @@ import com.gdsc.hearo.domain.item.repository.ItemRepository;
 import com.gdsc.hearo.domain.item.repository.WishRepository;
 import com.gdsc.hearo.domain.member.entity.Member;
 import com.gdsc.hearo.domain.member.repository.MemberRepository;
+import com.gdsc.hearo.global.common.BaseException;
+import com.gdsc.hearo.global.common.BaseResponseStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,13 +33,19 @@ public class WishService {
         this.memberRepository = memberRepository;
     }
 
-    public WishResponseDto addToWishList(Long userId, Long itemId){
+    @Transactional
+    public WishResponseDto addToWishList(Long userId, Long itemId) throws BaseException {
 
         Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new RuntimeException("상품을 찾을 수 없습니다."));
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_CONTENT));
 
         Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("회원을 찾을 수 없습니다."));
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.FAILED_TO_FIND_USER));
+
+        // 이미 위시리스트에 있는지 확인
+        if (isItemInWishlist(itemId, userId)) {
+            throw new BaseException(BaseResponseStatus.DUPICATE_ITEM);
+        }
 
         Wish wish = Wish.builder()
                 .item(item)
@@ -100,4 +108,18 @@ public class WishService {
                     .build();
         }
     }
+
+    //상품이 위시리스트에 존재하는지 확인
+    public boolean isItemInWishlist(Long itemId, Long userId) {
+        Optional<Member> member = memberRepository.findById(userId);
+        if (member.isPresent()) {
+            List<Wish> wishList = wishRepository.findByMember_MemberId(userId);
+            return wishList.stream().anyMatch(wish -> wish.getItem().getItemId().equals(itemId));
+        } else {
+            return false;
+        }
+    }
+
+
+
 }

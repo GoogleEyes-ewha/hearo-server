@@ -4,6 +4,7 @@ import com.gdsc.hearo.domain.item.dto.WishListResponseDto;
 import com.gdsc.hearo.domain.item.dto.WishRequestDto;
 import com.gdsc.hearo.domain.item.dto.WishResponseDto;
 import com.gdsc.hearo.domain.item.service.WishService;
+import com.gdsc.hearo.global.common.BaseException;
 import com.gdsc.hearo.global.common.BaseResponse;
 import com.gdsc.hearo.global.common.BaseResponseStatus;
 import com.gdsc.hearo.global.security.CustomUserDetails;
@@ -33,6 +34,9 @@ public class WishController {
         try{
             Long userId = userDetails.getMember().getMemberId();
             WishResponseDto result = wishService.addToWishList(userId, wishRequestDto.getItemId());
+
+
+
 
             response = new BaseResponse<>(BaseResponseStatus.SUCCESS, result);
             return ResponseEntity.ok(response);
