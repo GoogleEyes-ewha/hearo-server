@@ -78,36 +78,49 @@ public class DocumentAiService {
             String text = documentResponse.getText();
 
             // Read the text recognition output from the processor
-            //System.out.println("The document contains the following paragraphs:");
-            Document.Page firstPage = documentResponse.getPages(0);
-            List<Document.Page.Paragraph> paragraphs = firstPage.getParagraphsList();
-
-            // Read the text recognition output from the processor
             List<Document.Page> pages = documentResponse.getPagesList();
-            //System.out.printf("There are %s page(s) in this document.\n", pages.size());
+            System.out.printf("There are %s page(s) in this document.\n", pages.size());
 
             for (Document.Page page : pages) {
+                System.out.printf("\n\n**** Page %d ****\n", page.getPageNumber());
 
                 List<Document.Page.Table> tables = page.getTablesList();
-
-                //영양성분표 없는 상황 추가해야함
-
+                System.out.printf("Found %d table(s):\n", tables.size());
                 for (Document.Page.Table table : tables) {
-                    nutritionText += printTableInfo(table, text);
+                    nutritionText += extractTableContents(table, documentResponse.getText());
                 }
 
-                List<Document.Page.FormField> formFields = page.getFormFieldsList();
-                for (Document.Page.FormField formField : formFields) {
-                    String fieldName = getLayoutText(formField.getFieldName().getTextAnchor(), text);
-                    String fieldValue = getLayoutText(formField.getFieldValue().getTextAnchor(), text);
-
-                    System.out.printf(
-                            "    '%s': '%s'\n", removeNewlines(fieldName), removeNewlines(fieldValue));
-                    nutritionText += String.format("    '%s': '%s'", removeNewlines(fieldName), removeNewlines(fieldValue));
-                }
+                // ... (Other code for additional processing, if needed)
             }
+
+
         }
         return nutritionText;
+    }
+
+    private static String extractTableContents(Document.Page.Table table, String text) {
+
+        String tableText="";
+        Document.Page.Table.TableRow headerRow = table.getHeaderRows(0);
+        // Extract and print header
+        StringBuilder headerRowText = new StringBuilder();
+        for (Document.Page.Table.TableCell cell : headerRow.getCellsList()) {
+            String columnName = getLayoutText(cell.getLayout().getTextAnchor(), text);
+            headerRowText.append(String.format("%s | ", removeNewlines(columnName)));
+        }
+        headerRowText.setLength(headerRowText.length() - 3);
+        System.out.printf("Columns: %s\n", headerRowText.toString());
+        tableText += headerRowText.toString();
+        for (Document.Page.Table.TableRow bodyRow : table.getBodyRowsList()) {
+            for (Document.Page.Table.TableCell cell : bodyRow.getCellsList()) {
+                String cellText = getLayoutText(cell.getLayout().getTextAnchor(), text);
+                System.out.printf("Table cell text: '%s'\n", removeNewlines(cellText));
+
+                //tableText += String.format("  '%s' |", removeNewlines(cellText));
+                tableText += (removeNewlines(cellText)+" | ");
+            }
+        }
+        return tableText;
     }
 
     private static byte[] readImageDataFromUrl(String imageUrl) throws IOException {
@@ -124,45 +137,25 @@ public class DocumentAiService {
             return outputStream.toByteArray();
         }
     }
-
-    private static String printTableInfo(Document.Page.Table table, String text) {
-
-        String tableText = "";
-        Document.Page.Table.TableRow firstBodyRow = table.getBodyRows(0);
-        int columnCount = firstBodyRow.getCellsCount();
-        /*System.out.printf(
-                "    Table with %d columns and %d rows:\n", columnCount, table.getBodyRowsCount());*/
-
-        Document.Page.Table.TableRow headerRow = table.getHeaderRows(0);
-        StringBuilder headerRowText = new StringBuilder();
-        for (Document.Page.Table.TableCell cell : headerRow.getCellsList()) {
-            String columnName = getLayoutText(cell.getLayout().getTextAnchor(), text);
-            headerRowText.append(String.format("%s  ", removeNewlines(columnName)));
-        }
-        headerRowText.setLength(headerRowText.length() - 3);
-        //System.out.printf("        Collumns: %s\n", headerRowText.toString());
-        tableText += headerRowText.toString();
-
-        StringBuilder firstRowText = new StringBuilder();
-        for (Document.Page.Table.TableCell cell : firstBodyRow.getCellsList()) {
-            String cellText = getLayoutText(cell.getLayout().getTextAnchor(), text);
-            firstRowText.append(String.format("%s  ", removeNewlines(cellText)));
-        }
-        firstRowText.setLength(firstRowText.length() - 3);
-        //System.out.printf("        First row data: %s\n", firstRowText.toString());
-        tableText += firstRowText;
-
-        return tableText;
-    }
-
     // Extract shards from the text field
     private static String getLayoutText(Document.TextAnchor textAnchor, String text) {
-        if (textAnchor.getTextSegmentsList().size() > 0) {
+        /*if (textAnchor.getTextSegmentsList().size() > 0) {
             int startIdx = (int) textAnchor.getTextSegments(0).getStartIndex();
             int endIdx = (int) textAnchor.getTextSegments(0).getEndIndex();
             return text.substring(startIdx, endIdx);
         }
-        return "[NO TEXT]";
+        return "[NO TEXT]";*/
+
+        StringBuilder result = new StringBuilder();
+
+        for (Document.TextAnchor.TextSegment textSegment : textAnchor.getTextSegmentsList()) {
+            int startIdx = (int) textSegment.getStartIndex();
+            int endIdx = (int) textSegment.getEndIndex();
+            String segmentText = text.substring(startIdx, endIdx);
+            result.append(segmentText);
+        }
+
+        return result.toString();
     }
 
     private static String removeNewlines(String s) {

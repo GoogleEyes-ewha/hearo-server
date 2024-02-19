@@ -1,6 +1,5 @@
 package com.gdsc.hearo.domain.item.service;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 import com.gdsc.hearo.domain.item.dto.ItemDto;
 import com.gdsc.hearo.domain.item.dto.WishListResponseDto;
 import com.gdsc.hearo.domain.item.dto.WishResponseDto;
