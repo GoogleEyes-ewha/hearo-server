@@ -37,6 +37,7 @@ public class SecurityConfig {
         corsConfig.addAllowedOrigin("http://localhost:3000");
         corsConfig.addAllowedOrigin("http://localhost:8080");
         corsConfig.addAllowedOrigin("https://hearo-server.shop:8080");
+        corsConfig.addAllowedOrigin("https://hearo-hmuri.vercel.app");
         corsConfig.addAllowedMethod("*");
         corsConfig.addAllowedHeader("*");
         corsConfig.setAllowCredentials(true);
