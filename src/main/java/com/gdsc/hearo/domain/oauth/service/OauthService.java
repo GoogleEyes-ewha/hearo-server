@@ -5,8 +5,6 @@ import com.gdsc.hearo.domain.member.repository.MemberRepository;
 import com.gdsc.hearo.domain.oauth.dto.GoogleOAuthToken;
 import com.gdsc.hearo.domain.oauth.dto.GoogleProfile;
 import com.gdsc.hearo.domain.oauth.service.social.GoogleOauth;
-import com.gdsc.hearo.global.common.BaseException;
-import com.gdsc.hearo.global.common.BaseResponseStatus;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,7 +34,7 @@ public class OauthService {
         return googleOauth.requestGoogleProfile(googleOAuthToken);
     }
 
-    public Member googleLogin(GoogleProfile googleProfile) throws BaseException {
+    public Member googleLogin(GoogleProfile googleProfile)  {
         String email = googleProfile.getEmail();
         String googleId = googleProfile.getId();
         String username = googleProfile.getName();
