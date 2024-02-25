@@ -35,7 +35,7 @@ public class OauthController {
 
         RedirectView redirectView = new RedirectView();
 
-        redirectView.setUrl("http://localhost:3000/login/callback?accessToken={accessToken}&refreshToken={refreshToken}");
+        redirectView.setUrl("https://hearo-hmuri.vercel.app/login/callback?accessToken={accessToken}&refreshToken={refreshToken}");
         redirectView.addStaticAttribute("accessToken", accessToken);
         redirectView.addStaticAttribute("refreshToken", refreshToken);
 
